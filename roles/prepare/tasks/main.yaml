@@ -1,0 +1,13 @@
+---
+- name: Install basic packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    cache_valid_time: 3600
+    update_cache: true
+  loop: "{{ prepare_apt_packages }}"
+
+- name: Set timezone
+  become: true
+  community.general.timezone:
+    name: "{{ prepare_hosts_timezone }}"

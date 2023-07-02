@@ -1,0 +1,6 @@
+---
+etc_hosts_group: all
+etc_hosts_block: |
+  {% for host in groups[etc_hosts_group] | sort %}
+  {{ hostvars[host]['ansible_host'] }}          {{ host }}
+  {% endfor %}

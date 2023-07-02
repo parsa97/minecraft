@@ -1,0 +1,56 @@
+enforce_secure_profile: false
+listeners:
+- query_port: {{ bungeecord_server_port }}
+  motd: '&1Another Bungee server'
+  tab_list: GLOBAL_PING
+  query_enabled: true
+  proxy_protocol: false
+  forced_hosts:
+    pvp.md-5.net: pvp
+  ping_passthrough: false
+  priorities:
+{% for server in groups['minecraft'] | sort %}
+  - {{ hostvars[server]['inventory_hostname'] }}
+{% endfor %}
+  bind_local_address: true
+  host: {{ bungeecord_server_listen }}:{{ bungeecord_server_port }}
+  max_players: 1
+  tab_size: 60
+  force_default_server: false
+remote_ping_cache: -1
+network_compression_threshold: 256
+permissions:
+  default:
+  - bungeecord.command.server
+  - bungeecord.command.list
+  admin:
+  - bungeecord.command.alert
+  - bungeecord.command.end
+  - bungeecord.command.ip
+  - bungeecord.command.reload
+  - bungeecord.command.kick
+log_pings: true
+connection_throttle_limit: 3
+server_connect_timeout: 5000
+timeout: 30000
+player_limit: -1
+prevent_proxy_connections: false
+ip_forward: true
+groups:
+  md_5:
+  - admin
+remote_ping_timeout: 5000
+connection_throttle: 4000
+log_commands: false
+stats: a88dee05-1aa0-48e9-b14d-bbacb658701d
+online_mode: false
+forge_support: false
+disabled_commands:
+- disabledcommandhere
+servers:
+{% for server in bungeecord_minecraft_servers | sort %}
+  {{ hostvars[server]['inventory_hostname'] }}:
+    motd: '&1Just another BungeeCord - {{ hostvars[server]['inventory_hostname'] }}'
+    address: {{ hostvars[server]['ansible_host'] }}:{{ hostvars[server]['minecraft_server_port'] }}
+    restricted: false
+{% endfor %}

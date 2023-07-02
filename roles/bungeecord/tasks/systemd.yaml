@@ -1,0 +1,41 @@
+---
+- name: Check bungeecord is exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ bungeecord_jar_file_path }}"
+  register: _bungeecord_jar_stat
+
+- name: Download bungeecord
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ bungeecord_download_url }}"
+    dest: "{{ bungeecord_jar_file_path }}"
+    owner: root
+    group: "{{ bungeecord_group_gid }}"
+    mode: "0640"
+  when:
+    - bungeecord_upgrade or
+      not _bungeecord_jar_stat.stat.exists
+
+- name: Bungeecord system services
+  become: true
+  ansible.builtin.template:
+    src: bungeecord.service.j2
+    dest: /etc/systemd/system/bungeecord.service
+    mode: "0644"
+    owner: root
+    group: root
+  notify:
+    - Systemd daemon reload
+    - Restart bungeecord
+
+- name: Refresh handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Make sure bungeecord is started
+  become: true
+  ansible.builtin.systemd:
+    service: bungeecord.service
+    state: started
+    enabled: true
+    masked: false

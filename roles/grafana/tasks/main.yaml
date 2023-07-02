@@ -1,0 +1,13 @@
+---
+- name: Import grafana pretasks
+  ansible.builtin.include_tasks: pretasks.yaml
+
+- name: Deploy grafana
+  ansible.builtin.include_tasks: docker.yaml
+
+- name: Import grafana post-check
+  ansible.builtin.include_tasks: postcheck.yaml
+
+- name: Import grafana mgmt
+  ansible.builtin.include_tasks: mgmt.yaml
+  tags: grafana_mgmt

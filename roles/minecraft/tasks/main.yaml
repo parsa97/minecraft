@@ -1,0 +1,15 @@
+---
+- name: Import minecraft pretasks
+  ansible.builtin.include_tasks: pretasks.yaml
+
+- name: Config minecraft
+  ansible.builtin.include_tasks: config.yaml
+
+- name: Import minecraft mcrcon
+  ansible.builtin.include_tasks: mcrcon.yaml
+
+- name: Import minecraft exporter
+  ansible.builtin.include_tasks: exporter.yaml
+
+- name: Deploy minecraft
+  ansible.builtin.include_tasks: systemd.yaml

@@ -1,0 +1,47 @@
+---
+- name: Create plugin directory
+  become: true
+  ansible.builtin.file:
+    state: directory
+    dest: "{{ minecraft_plugins_dir }}"
+    owner: "{{ minecraft_user_uid }}"
+    group: "{{ minecraft_group_gid }}"
+    mode: "0770"
+
+- name: Check minecraft exporter is exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ minecraft_exporter_jar_file_path }}"
+  register: _minecraft_exporter_jar_stat
+
+- name: Download minecraft exporter if not exists
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ minecraft_exporter_download_url }}"
+    dest: "{{ minecraft_exporter_jar_file_path }}"
+    owner: "{{ minecraft_user_uid }}"
+    group: "{{ minecraft_group_gid }}"
+    mode: "0640"
+  when:
+    - minecraft_upgrade or
+     not _minecraft_exporter_jar_stat.stat.exists
+  notify: Restart minecraft
+
+- name: Create minecraft exporter dir
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ minecraft_plugins_dir }}/PrometheusExporter"
+    mode: "0770"
+    owner: "{{ minecraft_user_uid }}"
+    group: "{{ minecraft_group_gid }}"
+
+- name: Copy minecraft exporter config.yaml
+  become: true
+  ansible.builtin.template:
+    src: exporter-config.yml.j2
+    dest: "{{ minecraft_plugins_dir }}/PrometheusExporter/config.yml"
+    mode: "0640"
+    owner: "{{ minecraft_user_uid }}"
+    group: "{{ minecraft_group_gid }}"
+  notify: Restart minecraft

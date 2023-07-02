@@ -1,0 +1,41 @@
+---
+- name: Check minecraft is exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ minecraft_jar_file_path }}"
+  register: _minecraft_jar_stat
+
+- name: Download minecraft
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ minecraft_server_download_url }}"
+    dest: "{{ minecraft_jar_file_path }}"
+    owner: root
+    group: "{{ minecraft_group_gid }}"
+    mode: "0640"
+  when:
+    - minecraft_upgrade or
+      not _minecraft_jar_stat.stat.exists
+
+- name: Minecraft systemd service/socket
+  become: true
+  ansible.builtin.template:
+    src: "minecraft.service.j2"
+    dest: "/etc/systemd/system/minecraft.service"
+    mode: "0644"
+    owner: root
+    group: root
+  notify:
+    - Systemd daemon reload
+    - Restart minecraft
+
+- name: Refresh handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Start minecraft
+  become: true
+  ansible.builtin.systemd:
+    service: minecraft.service
+    state: started
+    enabled: true
+    masked: false

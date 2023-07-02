@@ -1,0 +1,79 @@
+---
+- name: Gather facts for all hosts
+  hosts: all
+  serial: 0
+  gather_facts: false
+  tasks:
+    - name: Gather facts
+      ansible.builtin.setup:
+  tags: always
+
+- name: Setup Vsphere VirtualMachines
+  hosts: ansible_machine
+  roles:
+    - vsphere
+  tags: vsphere
+
+- name: Prepare hosts
+  hosts: ionos
+  roles:
+    - prepare
+  tags: prepare
+
+- name: Lvextend
+  hosts: ionos
+  roles:
+    - lvextend
+  tags: lvextend
+
+- name: Modify /etc/hosts
+  hosts: ionos
+  roles:
+    - etc_hosts
+  tags: etc_hosts
+
+- name: Install docker
+  hosts: docker
+  roles:
+    - docker
+  tags: docker
+
+- name: Install Java
+  hosts:
+    - java
+  roles:
+    - java
+  tags: java
+
+- name: Deploy Minecraft
+  hosts: minecraft
+  roles:
+    - minecraft
+  tags: minecraft
+
+- name: Deploy bungeecord
+  hosts: bungeecord
+  roles:
+    - bungeecord
+  tags: bungeecord
+
+- name: Deploy node exporters
+  hosts: ionos
+  roles:
+    - node_exporter
+  tags:
+    node_exporter
+
+- name: Deploy prometheus
+  hosts: prometheus
+  roles:
+    - prometheus
+  tags:
+    prometheus
+
+- name: Deploy grafana
+  hosts: grafana
+  roles:
+    - grafana
+  tags:
+    grafana

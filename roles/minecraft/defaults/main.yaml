@@ -1,0 +1,38 @@
+---
+minecraft_working_dir: /opt/minecraft
+minecraft_plugins_dir: "{{ minecraft_working_dir }}/plugins"
+minecraft_server_version: 1.20.1
+minecraft_server_download_url: "https://download.getbukkit.org/spigot/spigot-{{ minecraft_server_version }}.jar"
+minecraft_jar_file_path: "{{ minecraft_working_dir }}/spigot.jar"
+
+minecraft_exporter_version: 2.5.0
+minecraft_exporter_download_url: https://github.com/sladkoff/minecraft-prometheus-exporter/releases/download/v{{ minecraft_exporter_version }}/minecraft-prometheus-exporter-{{ minecraft_exporter_version }}.jar # noqa: yaml[line-length]
+# This exporter is not working with ansible_host or ipv4 address
+# map name to specific interface address in /etc/hosts and use it here
+# or contribute in minecraft exporter project to fix this issue
+# 172.16.1.10     minecraft.eth0
+minecraft_exporter_listen: 0.0.0.0
+minecraft_exporter_port: 9225
+minecraft_exporter_jar_file_path: "{{ minecraft_plugins_dir }}/exporter.jar"
+
+minecraft_java_version: 17
+minecraft_java_xmx: 2G
+minecraft_java_xms: 2G
+
+minecraft_system_user: minecraft
+minecraft_system_group: minecraft
+minecraft_user_uid: 954
+minecraft_group_gid: 954
+
+minecraft_server_listen: "{{ ansible_host }}"
+minecraft_server_port: 25565
+minecraft_server_max_players: 50
+
+minecraft_rcon_port: 25575
+minecraft_rcon_password: someencryptedpassword
+
+minecraft_mcrcon_version: 0.7.2
+minecraft_mcrcon_donwload_url: https://github.com/Tiiffi/mcrcon/releases/download/v{{ minecraft_mcrcon_version }}/mcrcon-{{ minecraft_mcrcon_version }}-linux-x86-64.tar.gz # noqa: yaml[line-length]
+
+# In case of upgrade, pass this variable with extended variables "-e"
+minecraft_upgrade: false

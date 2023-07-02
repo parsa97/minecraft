@@ -1,0 +1,23 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Minecraft Service
+After=network.target network-online.target remote-fs.target
+
+[Service]
+Type=simple
+User={{ minecraft_system_user }}
+Group={{ minecraft_system_group }}
+WorkingDirectory={{ minecraft_working_dir }}
+ExecStart=/usr/lib/jvm/java-{{ minecraft_java_version }}-openjdk-amd64/bin/java -Xms{{ minecraft_java_xms }} -Xmx{{ minecraft_java_xmx }} -XX:+UseG1GC -jar {{ minecraft_working_dir }}/spigot.jar nogui
+EexcStop={{ minecraft_working_dir }}/mcrcon -H {{ minecraft_server_listen }} -P {{ minecraft_rcon_port }} -p someencryptedpassword -w 5 "say Server is restarting!" save-all stop
+Restart=on-failure
+RestartSec=60
+
+ProtectHome=yes
+ProtectSystem=full
+PrivateDevices=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+[submodule "ansible_collections/community/vmware"]
+	path = ansible_collections/community/vmware
+	url = https://github.com/ansible-collections/community.vmware.git
+[submodule "ansible_collections/community/general"]
+	path = ansible_collections/community/general
+	url = https://github.com/ansible-collections/community.general.git
+[submodule "ansible_collections/community/docker"]
+	path = ansible_collections/community/docker
+	url = https://github.com/ansible-collections/community.docker.git
+[submodule "ansible_collections/community/grafana"]
+	path = ansible_collections/community/grafana
+	url = https://github.com/ansible-collections/community.grafana.git
+[submodule "prometheus"]
+	path = prometheus
+	url = https://github.com/prometheus-community/ansible.git

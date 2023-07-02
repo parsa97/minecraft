@@ -1,0 +1,17 @@
+---
+- name: Install parted
+  become: true
+  ansible.builtin.apt:
+    name: parted
+    cache_valid_time: 3600
+    update_cache: true
+  when: lvextend_resize_disks | length > 0
+
+- name: Parted
+  ansible.builtin.include_tasks: parted.yaml
+  loop: "{{ lvextend_resize_disks }}"
+  loop_control:
+    loop_var: _parted_disk
+
+- name: LVM Extend
+  ansible.builtin.include_tasks: lvextend.yaml

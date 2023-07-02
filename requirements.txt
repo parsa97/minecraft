@@ -1,0 +1,9 @@
+vSphere-Automation-SDK @ git+https://github.com/vmware/vsphere-automation-sdk-python.git@v8.0.1.0
+ansible-core == 2.15.1
+PyYAML == 6.0
+Jinja2 == 3.1.2
+cryptography == 41.0.1
+requests == 2.31.0
+pyVmomi == 8.0.1.0.1
+setuptools == 68.0.0
+ansible-lint == 6.17.2

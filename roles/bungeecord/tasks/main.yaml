@@ -1,0 +1,12 @@
+---
+- name: Import bungeecord pretasks
+  ansible.builtin.include_tasks: pretasks.yaml
+
+- name: Config bungeecord
+  ansible.builtin.include_tasks: config.yaml
+
+- name: Import bungeecord exporter
+  ansible.builtin.include_tasks: exporter.yaml
+
+- name: Deploy bungeecord
+  ansible.builtin.include_tasks: systemd.yaml

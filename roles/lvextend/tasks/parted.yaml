@@ -1,0 +1,19 @@
+---
+- name: Read device information
+  become: true
+  community.general.parted:
+    device: "{{ _parted_disk.name }}"
+    unit: MiB
+  register: _parted_disk_info
+
+- name: Extend an existing partition to fill all available space
+  become: true
+  community.general.parted:
+    device: "{{ _parted_disk.name }}"
+    number: "{{ _parted_disk.partition }}"
+    part_end: "100%"
+    resize: true
+    label: gpt
+    state: present
+  when:
+    - _parted_disk_info.skipped is not defined and _parted_disk_info.disk.size != _parted_disk_info.partitions[(_parted_disk.partition - 1)].end

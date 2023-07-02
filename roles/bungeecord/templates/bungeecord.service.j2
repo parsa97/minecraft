@@ -1,0 +1,15 @@
+[Unit]
+Description=bungeecord Service
+After=network.target network-online.target remote-fs.target
+
+[Service]
+Type=simple
+User=bungeecord
+Group=bungeecord
+WorkingDirectory={{ bungeecord_working_dir }}
+ExecStart=/usr/lib/jvm/java-{{ bungeecord_java_version }}-openjdk-amd64/bin/java -Xms{{ bungeecord_java_xms }} -Xmx{{ bungeecord_java_xmx }} -XX:+UseG1GC -jar {{ bungeecord_jar_file_path }}
+Restart=on-failure
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target

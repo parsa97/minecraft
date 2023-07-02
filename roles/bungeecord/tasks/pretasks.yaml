@@ -1,0 +1,17 @@
+---
+- name: Create bungeecord Group
+  become: true
+  ansible.builtin.group:
+    name: bungeecord
+    gid: "{{ bungeecord_group_gid }}"
+    system: true
+
+- name: Create bungeecord user
+  become: true
+  ansible.builtin.user:
+    name: bungeecord
+    group: bungeecord
+    uid: "{{ bungeecord_user_uid }}"
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false

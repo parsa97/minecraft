@@ -1,0 +1,19 @@
+---
+- name: Install java JDK
+  become: true
+  ansible.builtin.apt:
+    name: jdk-17
+    state: absent
+
+- name: Install java JDK
+  become: true
+  ansible.builtin.apt:
+    name: openjdk-{{ java_main_version }}-jre
+    cache_valid_time: 3600
+    update_cache: true
+
+- name: Post check
+  ansible.builtin.command: "/usr/lib/jvm/java-{{ java_main_version }}-openjdk-amd64/bin/java --version"
+  failed_when: _check_java.rc != 0
+  register: _check_java
+  changed_when: false

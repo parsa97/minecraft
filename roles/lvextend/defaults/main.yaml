@@ -1,0 +1,19 @@
+---
+lvextend_resize_disks: []
+  # - name: /dev/sda
+  #   partition: 3
+
+lvextend_vg: []
+  # - name: ubuntu-vg
+  #   pvs: /dev/sda3
+
+lvextend_lv: []
+  # - vgname: ubuntu-vg
+  #   lvname: root-lv
+  #   size: "8G"
+  # - vgname: ubuntu-vg
+  #   lvname: home-lv
+  #   size: "1G"
+  # - vgname: ubuntu-vg
+  #   lvname: var-lv
+  #   size: "30G"

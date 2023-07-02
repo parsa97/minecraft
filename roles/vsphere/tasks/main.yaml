@@ -1,0 +1,13 @@
+---
+- name: Vsphere terraform
+  become: false
+  run_once: true
+  community.general.terraform:
+    project_path: "{{ role_path }}/files/terraform/"
+    state: present
+    complex_vars: true
+    force_init: true
+    init_reconfigure: true
+    variables: "{{ vsphere_terraform_variables }}"
+    backend_config: "{{ vsphere_terraform_backend_config }}"
+  notify: Refresh inventory

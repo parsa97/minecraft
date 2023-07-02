@@ -1,0 +1,13 @@
+---
+- name: Systemd daemon reload
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart bungeecord
+  become: true
+  ansible.builtin.systemd:
+    service: bungeecord.service
+    state: restarted
+    enabled: true
+    masked: false

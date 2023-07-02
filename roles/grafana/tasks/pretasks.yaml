@@ -1,0 +1,13 @@
+---
+- name: Create grafana directory
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+    mode: "0770"
+    owner: "{{ grafana_docker_uid }}"
+    group: "{{ grafana_docker_uid }}"
+  with_items:
+    - "{{ grafana_data_dir }}"
+    - "{{ grafana_log_dir }}"
+    - "{{ grafana_data_dir }}/dashboards"

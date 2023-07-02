@@ -1,0 +1,28 @@
+---
+bungeecord_working_dir: /opt/bungeecord
+bungeecord_plugins_dir: "{{ bungeecord_working_dir }}/plugins"
+bungeecord_release_number: 1716
+bungeecord_download_url: "https://ci.md-5.net/job/BungeeCord/{{ bungeecord_release_number }}/artifact/bootstrap/target/BungeeCord.jar"
+bungeecord_java_xmx: 2G
+bungeecord_java_xms: 2G
+bungeecord_deploy: binary
+bungeecord_java_version: 17
+bungeecord_user_uid: 954
+bungeecord_group_gid: 954
+bungeecord_jar_file_path: "{{ bungeecord_working_dir }}/bungeecord-{{ bungeecord_release_number }}.jar"
+bungeecord_server_listen: "{{ ansible_host }}"
+bungeecord_server_port: 25565
+
+
+bungeecord_exporter_version: 3.2.2
+bungeecord_exporter_download_url: https://github.com/weihao/bungeecord-prometheus-exporter/releases/download/{{ bungeecord_exporter_version }}/bungeecord-prometheus-exporter-{{ bungeecord_exporter_version }}.jar # noqa: yaml[line-length]
+# This exporter is not working with ansible_host or ipv4 address
+# map name to specific interface address in /etc/hosts and use it here
+# or contribute in bungeecord exporter project to fix this issue
+# 172.16.1.10     bungeecord.eth0
+bungeecord_exporter_listen: 0.0.0.0
+bungeecord_exporter_port: 9225
+bungeecord_exporter_jar_file_path: "{{ bungeecord_plugins_dir }}/exporter.jar"
+
+
+bungeecord_upgrade: false

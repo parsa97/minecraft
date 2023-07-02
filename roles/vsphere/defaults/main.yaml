@@ -1,0 +1,31 @@
+---
+vsphere_vms: []
+  # - name: somevm
+  #   cpus: 4
+  #   memory: 8192
+  #   root_disk_size: 50
+  #   ipv4: 192.168.1.10
+  #   netmask: 24
+  #   gateway: 192.168.1.1
+
+vsphere_terraform_backend_config: {}
+  # endpoint: aws
+  # bucket: vsphere
+  # key: myvms
+  # region: eu-east-1
+  # access_key:
+  # secret_key:
+
+vsphere_terraform_variables: {}
+  # vsphere_server: "{{ vsphere_server }}"
+  # vsphere_password: "{{ vsphere_password }}"
+  # vsphere_user: "{{ vsphere_user }}"
+  # vsphere_datacenter_name: "{{ vsphere_datacenter_name }}"
+  # vsphere_datastore_name: "{{ vsphere_datastore }}"
+  # vsphere_cluster_name: "{{ vsphere_cluster_name }}"
+  # vsphere_folder_name: "{{ vsphere_folder_name | default(omit) }}"
+  # vsphere_network_name: "{{ vsphere_network_name }}"
+  # vspehre_template_name: "{{ vspehre_template_name }}"
+  # vsphere_vm_domain_name: "{{ vsphere_vm_domain_name }}"
+  # vsphere_dns_servers: "{{ vsphere_dns_servers }}"
+  # vsphere_vms: "{{ vsphere_vms }}"

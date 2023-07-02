@@ -1,0 +1,39 @@
+---
+- name: Insall required apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - gnupg
+
+- name: Add docker GPG apt Key
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ docker_gpg_url }}"
+    dest: /etc/apt/keyrings/docker.asc
+    owner: root
+    group: root
+    mode: "0664"
+
+- name: Add docker repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] {{ docker_apt_repo }} {{ ansible_distribution_release }} stable"
+    filename: docker
+    state: present
+
+- name: Install docker and docker-compose
+  become: true
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    cache_valid_time: 3600
+    update_cache: true
+
+- name: Install python docker sdk
+  become: true
+  ansible.builtin.pip:
+    name: docker-py

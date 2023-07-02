@@ -1,0 +1,17 @@
+---
+- name: Create minecraft Group
+  become: true
+  ansible.builtin.group:
+    name: "{{ minecraft_system_group }}"
+    gid: "{{ minecraft_group_gid }}"
+    system: true
+
+- name: Create minecraft user
+  become: true
+  ansible.builtin.user:
+    name: "{{ minecraft_system_user }}"
+    group: "{{ minecraft_system_group }}"
+    uid: "{{ minecraft_user_uid }}"
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false

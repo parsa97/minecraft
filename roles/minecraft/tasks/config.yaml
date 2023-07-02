@@ -1,0 +1,67 @@
+---
+- name: Create minecraft data dir
+  become: true
+  ansible.builtin.file:
+    path: "{{ minecraft_working_dir }}"
+    state: directory
+    mode: "0770"
+    owner: "{{ minecraft_user_uid }}"
+    group: "{{ minecraft_group_gid }}"
+
+- name: Copy minecraft eula
+  become: true
+  ansible.builtin.copy:
+    src: eula.txt
+    dest: "{{ minecraft_working_dir }}/eula.txt"
+    mode: "0644"
+    owner: "{{ minecraft_user_uid }}"
+    group: "{{ minecraft_group_gid }}"
+
+- name: Copy minecraft spigot and bukkit configs
+  become: true
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "{{ minecraft_working_dir }}/{{ item }}"
+    mode: "0664"
+    owner: "{{ minecraft_user_uid }}"
+    group: "{{ minecraft_group_gid }}"
+  notify: Restart minecraft
+  with_items:
+    - spigot.yml
+    - bukkit.yml
+
+# Minecraft will change this file data and add a comment at the beggining
+# This task will check the server.properties changes and if changes are only on commented lines
+# We will ignore it else we replace the file with new changes
+- name: Check server.properties changes
+  become: true
+  ansible.builtin.template:
+    src: server.properties.j2
+    dest: "{{ minecraft_working_dir }}/server.properties"
+    mode: "0664"
+    owner: "{{ minecraft_user_uid }}"
+    group: "{{ minecraft_group_gid }}"
+  check_mode: true
+  changed_when: false
+  register: _server_properties_diff
+
+- name: Check minecraft server.properties is exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ minecraft_working_dir }}/server.properties"
+  register: _minecraft_server_properties_stat
+
+- name: Create server.properties if not exists
+  become: true
+  ansible.builtin.template:
+    src: server.properties.j2
+    dest: "{{ minecraft_working_dir }}/server.properties"
+    mode: "0664"
+    owner: "{{ minecraft_user_uid }}"
+    group: "{{ minecraft_group_gid }}"
+  when: _server_properties_diff.diff[0]['before'] |
+        default(lookup('ansible.builtin.template', 'server.properties.j2')) |
+        regex_replace('^#.*\n', '', multiline=true) !=
+        lookup('ansible.builtin.template', 'server.properties.j2') or
+        not _minecraft_server_properties_stat.stat.exists
+  notify: Restart minecraft

@@ -1,0 +1,43 @@
+---
+- name: Create prometheus datasource
+  community.grafana.grafana_datasource:
+    name: Prometheus
+    grafana_url: "{{ grafana_url }}"
+    grafana_user: "{{ grafana_admin_user }}"
+    grafana_password: "{{ grafana_admin_passowrd }}"
+    ds_type: prometheus
+    ds_url: "{{ grafana_prometheus_url }}"
+    tls_skip_verify: true
+    state: present
+    is_default: true
+    uid: "{{ grafana_prometheus_uid | default(omit) }}"
+
+- name: Copy dashboards to grafana dir
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ grafana_data_dir }}/dashboards/{{ item | basename }}"
+    mode: "0640"
+    owner: root
+    group: root
+  loop: "{{ grafana_dashboard_paths }}"
+
+- name: Import Grafana dashboard from path
+  become: true
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_url }}"
+    grafana_user: "{{ grafana_admin_user }}"
+    grafana_password: "{{ grafana_admin_passowrd }}"
+    path: "{{ grafana_data_dir }}/dashboards/{{ item | basename }}"
+    overwrite: true
+  loop: "{{ grafana_dashboard_paths }}"
+
+- name: Import Grafana dashboard from path
+  become: true
+  community.grafana.grafana_dashboard:
+    grafana_url: "{{ grafana_url }}"
+    grafana_user: "{{ grafana_admin_user }}"
+    grafana_password: "{{ grafana_admin_passowrd }}"
+    dashboard_url: "{{ item }}"
+    overwrite: true
+  loop: "{{ grafana_dashboard_urls }}"

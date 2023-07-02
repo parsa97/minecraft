@@ -1,0 +1,8 @@
+---
+- name: Check grafana is up and running
+  ansible.builtin.uri:
+    url: "{{ grafana_url }}"
+  register: _grafana_http_res
+  until: _grafana_http_res.status == 200
+  retries: 20
+  delay: 10

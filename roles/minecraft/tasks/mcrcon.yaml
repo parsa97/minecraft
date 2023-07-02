@@ -1,0 +1,17 @@
+---
+- name: Check minecraft is exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ minecraft_working_dir }}/mcrcon"
+  register: _mcrcon_binary_stat
+
+- name: Download mcrcon
+  become: true
+  ansible.builtin.unarchive:
+    src: "{{ minecraft_mcrcon_donwload_url }}"
+    dest: "{{ minecraft_working_dir }}"
+    mode: "0770"
+    owner: root
+    group: "{{ minecraft_group_gid }}"
+    remote_src: true
+  when: not _mcrcon_binary_stat.stat.exists

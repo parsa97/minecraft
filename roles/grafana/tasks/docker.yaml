@@ -1,0 +1,19 @@
+---
+- name: Deploy grafana
+  become: true
+  community.docker.docker_container:
+    state: started
+    name: grafana
+    image: "grafana/grafana:{{ grafana_version }}"
+    restart_policy: always
+    published_ports:
+      - "{{ grafana_port }}:3000"
+    expose:
+      - "{{ grafana_port }}"
+    env:
+      GF_DEFAULT_INSTANCE_NAME: "{{ grafana_instance_name }}"
+      GF_SECURITY_ADMIN_USER: "{{ grafana_admin_user }}"
+      GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_admin_passowrd }}"
+    volumes:
+      - "{{ grafana_data_dir }}:/var/lib/grafana"
+      - "{{ grafana_log_dir }}:/var/log/grafana"

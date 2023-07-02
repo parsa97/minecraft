@@ -1,0 +1,44 @@
+---
+- name: Create bungeecord data dir
+  become: true
+  ansible.builtin.file:
+    path: "{{ bungeecord_working_dir }}"
+    state: directory
+    mode: "0770"
+    owner: "{{ bungeecord_group_gid }}"
+    group: "{{ bungeecord_user_uid }}"
+
+# Bungeecord will change this file This task will check the
+# config.yml changes and if changes are only on line numbers
+# We will ignore it else we replace the file with new changes
+- name: Check config.yml changes
+  become: true
+  ansible.builtin.template:
+    src: config.yml.j2
+    dest: "{{ bungeecord_working_dir }}/config.yml"
+    mode: "0664"
+    owner: "{{ bungeecord_group_gid }}"
+    group: "{{ bungeecord_user_uid }}"
+  check_mode: true
+  changed_when: false
+  register: _bungeecord_config_diff
+
+- name: Check bungeecord config.yml is exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ bungeecord_working_dir }}/config.yml"
+  register: _bungeecord_server_properties_stat
+
+- name: Create config.yml if not exists
+  become: true
+  ansible.builtin.template:
+    src: config.yml.j2
+    dest: "{{ bungeecord_working_dir }}/config.yml"
+    mode: "0664"
+    owner: "{{ bungeecord_group_gid }}"
+    group: "{{ bungeecord_user_uid }}"
+  when: (_bungeecord_config_diff.diff[0]['before'] |
+        default(lookup('ansible.builtin.template', 'config.yml.j2')) | sort) !=
+        lookup('ansible.builtin.template', 'config.yml.j2') | sort or
+        not _bungeecord_server_properties_stat.stat.exists
+  notify: Restart bungeecord
