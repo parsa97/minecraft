@@ -1,0 +1,33 @@
+---
+powerdns_gpg_url: https://repo.powerdns.com/FD380FBB-pub.asc
+powerdns_apt_repo: http://repo.powerdns.com/ubuntu
+
+# Powerdns have multiple repositories and need to define we are looking for which versions
+powerdns_release_line: 48
+
+powerdns_version: 4.8.0-1pdns.jammy
+
+powerdns_database_dir: /var/lib/powerdns
+powerdns_database_name: powerdns.sqlite3
+powerdns_database_path: "{{ powerdns_database_dir }}/{{ powerdns_database_name }}"
+
+powerdns_host_dns_resolvers: |
+  nameserver 1.1.1.1
+  nameserver 8.8.8.8
+
+powerdns_api_key: someencryptedapikey
+powerdns_api_port: 8081
+
+powerdns_zones: []
+  # - name: mydomain.local.
+  #   ns: ns1.mydomain.local.
+  #   kind: master
+  #   records:
+  #     - name: ns1
+  #       type: A
+  #       content: "{{ ansible_host }}"
+  #       ttl: 600
+  #     - name: minecraft
+  #       type: LUA
+  #       content: "A \"ifportup(25565, {'10.10.10.1', '10.10.10.2'})\""
+  #       ttl: 60

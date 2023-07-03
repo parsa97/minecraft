@@ -13,3 +13,6 @@
 [submodule "prometheus"]
 	path = prometheus
 	url = https://github.com/prometheus-community/ansible.git
+[submodule "ansible_collections/pdns/pdns"]
+	path = ansible_collections/pdns/pdns
+	url = https://github.com/parsa97/pdsn-ansible-module.git

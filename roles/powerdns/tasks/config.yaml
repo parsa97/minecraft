@@ -1,0 +1,13 @@
+---
+- name: Copy powerdns config
+  become: true
+  ansible.builtin.template:
+    src: pdns.conf.j2
+    dest: /etc/powerdns/pdns.conf
+    mode: "0640"
+    owner: root
+    group: pdns
+  notify: Restart powerdns
+
+- name: Restart powerdns
+  ansible.builtin.meta: flush_handlers

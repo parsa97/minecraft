@@ -1,0 +1,7 @@
+---
+- name: Install powerdns {{ powerdns_version }}
+  become: true
+  ansible.builtin.apt:
+    name:
+      - pdns-server={{ powerdns_version }}
+      - pdns-backend-sqlite3={{ powerdns_version }}

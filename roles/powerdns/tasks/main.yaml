@@ -1,0 +1,18 @@
+---
+- name: Prepare powerdns
+  ansible.builtin.include_tasks: pretasks.yaml
+
+- name: Install powerdns
+  ansible.builtin.include_tasks: install.yaml
+
+- name: Import sqlite
+  ansible.builtin.include_tasks: sqlite3.yaml
+
+- name: Config powerdns
+  ansible.builtin.include_tasks: config.yaml
+
+- name: Import posttasks
+  ansible.builtin.include_tasks: posttasks.yaml
+  loop: "{{ powerdns_zones }}"
+  loop_control:
+    loop_var: _powerdns_zone

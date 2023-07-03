@@ -1,0 +1,38 @@
+---
+- name: Install sqlite3
+  become: true
+  ansible.builtin.apt:
+    name: sqlite3
+    update_cache: true
+    cache_valid_time: 1800
+
+- name: Create powerdns database dir
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: "{{ powerdns_database_dir }}"
+    mode: "0770"
+    owner: pdns
+    group: pdns
+
+- name: Check if powerdns database is exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ powerdns_database_path }}"
+  register: _powerdns_database_stat
+
+- name: Copy powerdns sqlite schema
+  become: true
+  ansible.builtin.shell:
+    cmd: sqlite3 "{{ powerdns_database_path }}" < /usr/share/doc/pdns-backend-sqlite3/schema.sqlite3.sql
+    executable: /bin/sh
+  when: not _powerdns_database_stat.stat.exists
+
+- name: Fix permissions
+  become: true
+  ansible.builtin.file:
+    state: file
+    path: "{{ powerdns_database_path }}"
+    mode: "0640"
+    owner: pdns
+    group: pdns

@@ -77,3 +77,10 @@
     - grafana
   tags:
     grafana
+
+- name: Deploy powerdns
+  hosts: powerdns
+  roles:
+    - powerdns
+  tags:
+    powerdns

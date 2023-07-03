@@ -1,0 +1,10 @@
+api=yes
+api-key={{ powerdns_api_key }}
+include-dir=/etc/powerdns/pdns.d
+launch=gsqlite3
+gsqlite3-database={{ powerdns_database_path }}
+enable-lua-records=yes
+webserver=yes
+webserver-port={{ powerdns_api_port }}
+webserver-address=127.0.0.1
+webserver-allow-from=127.0.0.1,::1

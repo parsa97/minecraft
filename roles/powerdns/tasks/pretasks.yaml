@@ -1,0 +1,41 @@
+---
+- name: Disable systemd-resolved
+  become: true
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    enabled: false
+    state: stopped
+    masked: true
+
+- name: Update /etc/resolv.conf
+  become: true
+  ansible.builtin.copy:
+    content: "{{ powerdns_host_dns_resolvers }}"
+    dest: /etc/resolv.conf
+    mode: "0644"
+    owner: root
+    group: root
+
+- name: Insall required apt packages
+  become: true
+  ansible.builtin.apt:
+    cache_valid_time: 1800
+    name:
+      - ca-certificates
+      - gnupg
+
+- name: Add powerdns GPG apt Key
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ powerdns_gpg_url }}"
+    dest: /etc/apt/keyrings/powerdns.asc
+    owner: root
+    group: root
+    mode: "0664"
+
+- name: Add powerdns repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/powerdns.asc] {{ powerdns_apt_repo }} {{ ansible_distribution_release }}-auth-{{ powerdns_release_line }} main" # noqa yaml[line-length]
+    filename: powerdns
+    state: present

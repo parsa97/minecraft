@@ -1,0 +1,23 @@
+---
+- name: Create powerdns zone
+  pdns.pdns.powerdns_zone:
+    name: "{{ _powerdns_zone.name }}"
+    nameservers: "{{ _powerdns_zone.ns }}"
+    kind: "{{ _powerdns_zone.kind }}"
+    state: present
+    pdns_host: 127.0.0.1
+    pdns_port: "{{ powerdns_api_port }}"
+    pdns_api_key: "{{ powerdns_api_key }}"
+  no_log: true
+
+- name: Creta powerdns records
+  pdns.pdns.powerdns_record:
+    name: "{{ item.name }}.{{ _powerdns_zone.name }}"
+    zone: "{{ _powerdns_zone.name }}"
+    type: "{{ item.type }}"
+    content: "{{ item.content }}"
+    ttl: "{{ item.ttl }}"
+    pdns_host: 127.0.0.1
+    pdns_port: "{{ powerdns_api_port }}"
+    pdns_api_key: "{{ powerdns_api_key }}"
+  loop: '{{ _powerdns_zone.records }}'
